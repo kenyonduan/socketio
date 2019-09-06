@@ -4,9 +4,8 @@ import (
 	"io"
 	"net/http"
 
-	"socketio/engineio/parser"
-
-	"socketio/engineio/message"
+	"github.com/pschlump/socketio/engineio/message"
+	"github.com/pschlump/socketio/engineio/parser"
 )
 
 type Callback interface {

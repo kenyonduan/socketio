@@ -9,7 +9,7 @@ import (
 	"strconv"
 
 	"github.com/pschlump/json" //	"encoding/json"
-	"socketio/engineio"
+	"github.com/pschlump/socketio/engineio"
 )
 
 const Protocol = 4

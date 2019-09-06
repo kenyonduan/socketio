@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/pschlump/json" //	"encoding/json"
-	"socketio/engineio/message"
-	"socketio/engineio/parser"
-	"socketio/engineio/transport"
+	"github.com/pschlump/socketio/engineio/message"
+	"github.com/pschlump/socketio/engineio/parser"
+	"github.com/pschlump/socketio/engineio/transport"
 )
 
 type MessageType message.MessageType

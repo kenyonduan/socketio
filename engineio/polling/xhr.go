@@ -1,7 +1,7 @@
 package polling
 
 import (
-	"socketio/engineio/transport"
+	"github.com/pschlump/socketio/engineio/transport"
 )
 
 var Creater = transport.Creater{

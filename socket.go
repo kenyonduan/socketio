@@ -3,7 +3,7 @@ package socketio
 import (
 	"net/http"
 
-	"socketio/engineio"
+	"github.com/pschlump/socketio/engineio"
 )
 
 // Socket is the socket object of socket.io.

@@ -13,10 +13,11 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"socketio"
 	"sync"
 
 	flags "github.com/jessevdk/go-flags"
+
+	"github.com/pschlump/socketio"
 )
 
 var port string = "9000"
