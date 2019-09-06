@@ -3,6 +3,7 @@ package websocket
 import (
 	"io"
 	"net/http"
+	"sync"
 
 	"github.com/pschlump/socketio/engineio/message"
 	"github.com/pschlump/socketio/engineio/parser"
@@ -14,6 +15,7 @@ import (
 type Server struct {
 	callback transport.Callback
 	conn     *websocket.Conn
+	l        sync.Mutex
 }
 
 /*
@@ -53,6 +55,9 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) NextWriter(msgType message.MessageType, packetType parser.PacketType) (io.WriteCloser, error) {
+	s.l.Lock()
+	defer s.l.Unlock()
+
 	wsType, newEncoder := websocket.TextMessage, parser.NewStringEncoder
 	if msgType == message.MessageBinary {
 		wsType, newEncoder = websocket.BinaryMessage, parser.NewBinaryEncoder
