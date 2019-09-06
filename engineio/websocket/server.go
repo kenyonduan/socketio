@@ -2,8 +2,8 @@ package websocket
 
 import (
 	"io"
+	"log"
 	"net/http"
-	"sync"
 
 	"socketio/engineio/parser"
 
@@ -16,7 +16,6 @@ import (
 type Server struct {
 	callback transport.Callback
 	conn     *websocket.Conn
-	l        sync.Mutex
 }
 
 /*
@@ -56,8 +55,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) NextWriter(msgType message.MessageType, packetType parser.PacketType) (io.WriteCloser, error) {
-	s.l.Lock()
-	defer s.l.Unlock()
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("Socket Recovered in r", r)
+		}
+	}()
 
 	wsType, newEncoder := websocket.TextMessage, parser.NewStringEncoder
 	if msgType == message.MessageBinary {
