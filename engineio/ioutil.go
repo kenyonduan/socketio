@@ -2,9 +2,8 @@ package engineio
 
 import (
 	"io"
+	"socketio/engineio/parser"
 	"sync"
-
-	"github.com/pschlump/socketio/engineio/parser"
 )
 
 type connReader struct {

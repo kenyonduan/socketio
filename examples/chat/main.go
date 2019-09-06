@@ -14,10 +14,10 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"socketio"
 
 	"github.com/pschlump/MiscLib"
 	"github.com/pschlump/godebug"
-	"github.com/pschlump/socketio"
 )
 
 var Port = flag.String("port", "9000", "Port to listen to")                           // 0

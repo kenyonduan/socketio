@@ -1,7 +1,7 @@
 package websocket
 
 import (
-	"github.com/pschlump/socketio/engineio/transport"
+	"socketio/engineio/transport"
 )
 
 var Creater = transport.Creater{

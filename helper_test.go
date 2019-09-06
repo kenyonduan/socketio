@@ -5,7 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/pschlump/socketio/engineio"
+	"socketio/engineio"
 )
 
 type WriterNopCloser struct {

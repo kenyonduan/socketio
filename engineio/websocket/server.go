@@ -5,9 +5,10 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/pschlump/socketio/engineio/message"
-	"github.com/pschlump/socketio/engineio/parser"
-	"github.com/pschlump/socketio/engineio/transport"
+	"socketio/engineio/parser"
+
+	"socketio/engineio/message"
+	"socketio/engineio/transport"
 
 	"github.com/gorilla/websocket"
 )
