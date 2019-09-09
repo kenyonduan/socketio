@@ -43,7 +43,7 @@ func NewServer(w http.ResponseWriter, r *http.Request, callback transport.Callba
 		conn:     conn,
 	}
 
-	ret.serveHTTP(w, r)
+	go ret.serveHTTP(w, r)
 
 	return ret, nil
 }
