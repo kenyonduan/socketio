@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/pschlump/json" //	"encoding/json"
 	"github.com/kenyonduan/socketio/engineio/message"
 	"github.com/kenyonduan/socketio/engineio/parser"
 	"github.com/kenyonduan/socketio/engineio/transport"
+	"github.com/pschlump/json" //	"encoding/json"
 )
 
 type MessageType message.MessageType
