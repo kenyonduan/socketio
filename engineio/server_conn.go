@@ -88,6 +88,7 @@ func newServerConn(id string, w http.ResponseWriter, r *http.Request, callback s
 	if creater.Name == "" {
 		return nil, InvalidError
 	}
+
 	ret := &serverConn{
 		id:           id,
 		request:      r,
@@ -98,17 +99,17 @@ func newServerConn(id string, w http.ResponseWriter, r *http.Request, callback s
 		pingInterval: callback.configure().PingInterval,
 		pingChan:     make(chan bool),
 	}
-	transport, err := creater.Server(w, r, ret)
+	t, err := creater.Server(w, r, ret)
 	if err != nil {
 		return nil, err
 	}
-	ret.setCurrent(transportName, transport)
+
+	ret.setCurrent(transportName, t)
 	if err := ret.onOpen(); err != nil {
 		return nil, err
 	}
 
 	go ret.pingLoop()
-
 	return ret, nil
 }
 
@@ -249,10 +250,10 @@ func (c *serverConn) OnClose(server transport.Server) {
 	c.callback.onClose(c.id)
 }
 
-func (s *serverConn) onOpen() error {
-	upgrades := []string{}
-	for name := range s.callback.transports() {
-		if name == s.currentName {
+func (c *serverConn) onOpen() error {
+	var upgrades []string
+	for name := range c.callback.transports() {
+		if name == c.currentName {
 			continue
 		}
 		upgrades = append(upgrades, name)
@@ -264,12 +265,12 @@ func (s *serverConn) onOpen() error {
 		PingTimeout  time.Duration `json:"pingTimeout"`
 	}
 	resp := connectionInfo{
-		Sid:          s.Id(),
+		Sid:          c.Id(),
 		Upgrades:     upgrades,
-		PingInterval: s.callback.configure().PingInterval / time.Millisecond,
-		PingTimeout:  s.callback.configure().PingTimeout / time.Millisecond,
+		PingInterval: c.callback.configure().PingInterval / time.Millisecond,
+		PingTimeout:  c.callback.configure().PingTimeout / time.Millisecond,
 	}
-	w, err := s.getCurrent().NextWriter(message.MessageText, parser.OPEN)
+	w, err := c.getCurrent().NextWriter(message.MessageText, parser.OPEN)
 	if err != nil {
 		return err
 	}
@@ -344,10 +345,12 @@ func (c *serverConn) setState(state state) {
 func (c *serverConn) pingLoop() {
 	lastPing := time.Now()
 	lastTry := lastPing
+
 	for {
 		now := time.Now()
 		pingDiff := now.Sub(lastPing)
 		tryDiff := now.Sub(lastTry)
+
 		select {
 		case ok := <-c.pingChan:
 			if !ok {
