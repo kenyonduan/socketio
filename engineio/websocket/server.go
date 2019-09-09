@@ -2,7 +2,6 @@ package websocket
 
 import (
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/kenyonduan/socketio/engineio/message"
@@ -44,7 +43,7 @@ func NewServer(w http.ResponseWriter, r *http.Request, callback transport.Callba
 		conn:     conn,
 	}
 
-	go ret.serveHTTP(w, r)
+	ret.serveHTTP(w, r)
 
 	return ret, nil
 }
@@ -54,12 +53,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) NextWriter(msgType message.MessageType, packetType parser.PacketType) (io.WriteCloser, error) {
-	defer func() {
-		if r := recover(); r != nil {
-			log.Println("Socket Recovered in r", r)
-		}
-	}()
-
 	wsType, newEncoder := websocket.TextMessage, parser.NewStringEncoder
 	if msgType == message.MessageBinary {
 		wsType, newEncoder = websocket.BinaryMessage, parser.NewBinaryEncoder
