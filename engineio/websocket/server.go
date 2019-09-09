@@ -3,6 +3,7 @@ package websocket
 import (
 	"io"
 	"net/http"
+	"sync"
 
 	"github.com/kenyonduan/socketio/engineio/message"
 	"github.com/kenyonduan/socketio/engineio/parser"
@@ -14,6 +15,7 @@ import (
 type Server struct {
 	callback transport.Callback
 	conn     *websocket.Conn
+	locker   sync.Mutex
 }
 
 /*
@@ -87,12 +89,14 @@ func (s *Server) serveHTTP(w http.ResponseWriter, r *http.Request) {
 		case websocket.TextMessage:
 			fallthrough
 		case websocket.BinaryMessage:
+			s.locker.Lock()
 			decoder, err := parser.NewDecoder(r)
 			if err != nil {
 				return
 			}
 			s.callback.OnPacket(decoder)
 			decoder.Close()
+			s.locker.Unlock()
 		}
 	}
 }
