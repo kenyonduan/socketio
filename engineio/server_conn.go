@@ -193,6 +193,9 @@ func (c *serverConn) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *serverConn) OnPacket(r *parser.PacketDecoder) {
+	c.writerLocker.Lock()
+	defer c.writerLocker.Unlock()
+
 	if s := c.getState(); s != stateNormal && s != stateUpgrading {
 		return
 	}
