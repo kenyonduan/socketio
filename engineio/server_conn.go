@@ -67,13 +67,13 @@ type serverConn struct {
 	request         *http.Request
 	callback        serverCallback
 	writerLocker    sync.Mutex
-	transportLocker sync.RWMutex
+	transportLocker sync.Mutex
 	currentName     string
 	current         transport.Server
 	upgradingName   string
 	upgrading       transport.Server
 	state           state
-	stateLocker     sync.RWMutex
+	stateLocker     sync.Mutex
 	readerChan      chan *connReader
 	pingTimeout     time.Duration
 	pingInterval    time.Duration
@@ -285,15 +285,15 @@ func (c *serverConn) onOpen() error {
 }
 
 func (c *serverConn) getCurrent() transport.Server {
-	c.transportLocker.RLock()
-	defer c.transportLocker.RUnlock()
+	c.transportLocker.Lock()
+	defer c.transportLocker.Unlock()
 
 	return c.current
 }
 
 func (c *serverConn) getUpgrade() transport.Server {
-	c.transportLocker.RLock()
-	defer c.transportLocker.RUnlock()
+	c.transportLocker.Lock()
+	defer c.transportLocker.Unlock()
 
 	return c.upgrading
 }
@@ -331,8 +331,8 @@ func (c *serverConn) upgraded() {
 }
 
 func (c *serverConn) getState() state {
-	c.stateLocker.RLock()
-	defer c.stateLocker.RUnlock()
+	c.stateLocker.Lock()
+	defer c.stateLocker.Unlock()
 	return c.state
 }
 
