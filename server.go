@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/kenyonduan/socketio/engineio"
 )
 
@@ -84,6 +86,12 @@ func (s *Server) BroadcastTo(room, message string, args ...interface{}) {
 }
 
 func (s *Server) loop() {
+	defer func() {
+		if r := recover(); r != nil {
+			logrus.Errorln("Server#loop Recovered in r", r)
+		}
+	}()
+
 	for {
 		conn, err := s.eio.Accept()
 		if err != nil {
