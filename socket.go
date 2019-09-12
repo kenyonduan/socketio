@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/kenyonduan/socketio/engineio"
+	"github.com/sirupsen/logrus"
 )
 
 // Socket is the socket object of socket.io.
@@ -94,6 +95,12 @@ func (s *socket) sendId(args []interface{}) (int, error) {
 }
 
 func (s *socket) loop() error {
+	defer func() {
+		if r := recover(); r != nil {
+			logrus.Errorln("Socket#loop Recovered in r", r)
+		}
+	}()
+
 	defer func() {
 		s.LeaveAll()
 		p := packet{
