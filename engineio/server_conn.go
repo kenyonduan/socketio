@@ -8,6 +8,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/kenyonduan/socketio/engineio/message"
 	"github.com/kenyonduan/socketio/engineio/parser"
 	"github.com/kenyonduan/socketio/engineio/transport"
@@ -346,6 +348,12 @@ func (c *serverConn) setState(state state) {
 }
 
 func (c *serverConn) pingLoop() {
+	defer func() {
+		if r := recover(); r != nil {
+			logrus.Errorln("ServerConn#pingLoop Recovered in r", r)
+		}
+	}()
+
 	lastPing := time.Now()
 	lastTry := lastPing
 

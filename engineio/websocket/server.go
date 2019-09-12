@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"sync"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/kenyonduan/socketio/engineio/message"
 	"github.com/kenyonduan/socketio/engineio/parser"
 	"github.com/kenyonduan/socketio/engineio/transport"
@@ -76,6 +78,11 @@ func (s *Server) Close() error {
 }
 
 func (s *Server) serveHTTP(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if r := recover(); r != nil {
+			logrus.Errorln("Server#serveHTTP Recovered in r", r)
+		}
+	}()
 	defer s.callback.OnClose(s)
 
 	for {
