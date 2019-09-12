@@ -216,9 +216,7 @@ func (h *socketHandler) onPacket(decoder *decoder, packet *packet) ([]interface{
 	}
 	if DbLogMessage {
 		fmt.Printf("At:%s\n", godebug.LF())
-	}
-	h.PrintEventsRespondedTo()
-	if DbLogMessage {
+		h.PrintEventsRespondedTo()
 		fmt.Printf("Message [%s] ", message)
 		if DbLogMessage {
 			fmt.Printf("%s\n", godebug.LF())
